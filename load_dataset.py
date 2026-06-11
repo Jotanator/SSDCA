@@ -1,15 +1,14 @@
 import os.path as osp
 import json
-from datetime import datetime
-from collections import defaultdict
-import re
+import random
+from collections import Counter
+
 import torch
 import torchvision.transforms as transforms
 from PIL import Image, ImageFile
-ImageFile.LOAD_TRUNCATED_IMAGES = True
 from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
-import random
-from collections import Counter
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # Generate Random 90 degree rotations 
 class RandomRotate:
@@ -29,9 +28,8 @@ def load_dataset(final_dataset_path, cv_folds_path, training_mode = 'train'):
         cv_folds = json.load(f)
     
     def extract_images(keys):
-        """Extract images based on keys and the flag for including LR images."""
+        """Extract images based on keys."""
         images = []
-        lr_images = []
         for key in keys:
             if key in final_dataset:
                 data_entry = final_dataset[key]
@@ -50,13 +48,8 @@ def load_dataset_one_image(final_dataset_path, cv_folds_path, training_mode = 't
         cv_folds = json.load(f)
     
     def extract_images(keys):
-        """Extract images based on keys and the flag for including LR images."""
+        """Extract images based on keys."""
         images = []
-        lr_images = []
-        # for key in final_dataset:
-        #     data_entry = final_dataset[key]
-        #     for combination in data_entry['pre']:
-        #         images.append(combination)
         for key in keys:
             if key in final_dataset:
                 data_entry = final_dataset[key]
@@ -66,10 +59,6 @@ def load_dataset_one_image(final_dataset_path, cv_folds_path, training_mode = 't
                     images.append(combination)
                 for combination in data_entry['1blr']:
                     images.append(combination)
-                # for combination in data_entry['during']:
-                #     images.append(combination)
-                # for combination in data_entry['pre']:
-                #     images.append(combination)
         return images
     return extract_images(cv_folds[training_mode])
 
@@ -96,10 +85,7 @@ class endoscopyDataset(Dataset):
             combinations_val = load_dataset(final_dataset_path, cv_folds_path, "val")
             combinations.extend(combinations_val)
 
-        if training_mode == 'train':
-            self.data = combinations
-        else:
-            self.data = combinations
+        self.data = combinations
 
         self.transform = transform
         # Extract class labels for WeightedRandomSampler
@@ -142,10 +128,7 @@ class endoscopyDataset_one_image(Dataset):
             combinations_val = load_dataset_one_image(final_dataset_path, cv_folds_path, "val")
             combinations.extend(combinations_val)
 
-        if training_mode == 'train':
-            self.data = combinations
-        else:
-            self.data = combinations
+        self.data = combinations
 
         self.transform = transform
 

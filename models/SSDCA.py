@@ -1,10 +1,7 @@
-
 import torch
 import torch.nn as nn
 import timm
-import matplotlib.pyplot as plt
-import numpy as np
-import os
+
 
 class SiameseSwinSCross_dual(nn.Module):
     def __init__(
@@ -86,18 +83,10 @@ class SiameseSwinSCross_dual(nn.Module):
         feat1 = feat1.view(B, H * W, C)  # [8, 49, 768]
         feat2 = feat2.view(B, H * W, C)  # [8, 49, 768]
 
-        q = feat1
-        k = feat2
-        v = feat2
-        attn_out, attn_weights1 = self.cross_attn(q, k, v)
-        attn_feat1 = attn_out.squeeze(1)
+        attn_out, attn_weights1 = self.cross_attn(query=feat1, key=feat2, value=feat2)
         attn_feat1 = self.norm_attn(feat1 + attn_out)
 
-        q = feat2
-        k = feat1
-        v = feat1
-        attn_out, attn_weights2 = self.cross_attn(q, k, v)
-        attn_feat2 = attn_out.squeeze(1)
+        attn_out, attn_weights2 = self.cross_attn(query=feat2, key=feat1, value=feat1)
         attn_feat2 = self.norm_attn(feat2 + attn_out)
 
         attn_feat1_og = attn_feat1.view(B, H, W, C)

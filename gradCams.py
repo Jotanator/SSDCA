@@ -17,9 +17,6 @@ def save_gradcam_overlay(
     mean=(0.485, 0.456, 0.406),
     std=(0.229, 0.224, 0.225)
 ):
-    
-    save_path = save_path
-        
     # De-normalize image
     img = input_tensor.clone().cpu()
     for c in range(3):
@@ -44,19 +41,12 @@ def save_gradcam_overlay(
     cam = np.maximum(cam, 0)
     cam = cam / (cam.max() + 1e-5)
 
-    # Convert CAM to 3-channel mask
-    # cam_rgb = np.stack([cam]*3, axis=-1)  # shape: (H, W, 3)
-
-    # Blend image with attention mask (dark areas = low attention)
-    # blended = img_np * cam_rgb
-
     base_path = f'gradCams/gradcams/{name[:-4]}'
     os.makedirs(base_path, exist_ok=True)
 
     # Plot and save
     fig, ax = plt.subplots()
     ax.imshow(img2_np)
-    # ax.set_title("Restaging Image")
     ax.axis('off')
     filename = "img2_original" + name + ".jpg"
     fig.savefig(os.path.join(base_path, filename),
@@ -65,7 +55,6 @@ def save_gradcam_overlay(
 
     fig, ax = plt.subplots()
     ax.imshow(img_np)
-    # ax.set_title("Follow up or LR Image")
     ax.axis('off')
     filename = "img1_original" + name + ".jpg"
     fig.savefig(os.path.join(base_path, filename),

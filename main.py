@@ -5,8 +5,6 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 import argparse
-import random
-import numpy as np
 import logging
 import os
 import re

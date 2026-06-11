@@ -1,20 +1,20 @@
-# from swin_model import SwinTransformerClassification
-from load_dataset import create_dataloader, create_dataloader_one_image
-from tqdm import tqdm
-import torch
-import numpy as np
-import torchvision.transforms as transforms
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix, balanced_accuracy_score, f1_score, roc_curve, auc, precision_recall_curve, PrecisionRecallDisplay, ConfusionMatrixDisplay
 import argparse
-from utils import get_model
-from train import test_model_one_image, test_model_gradCam
-import os
-import openpyxl
-np.set_printoptions(threshold=np.inf)  # disables truncation
 import glob
+import os
+
+import numpy as np
+import pandas as pd
+import torch
+import matplotlib.pyplot as plt
+from sklearn.metrics import (balanced_accuracy_score, confusion_matrix, roc_curve, auc,
+                              precision_recall_curve, PrecisionRecallDisplay, ConfusionMatrixDisplay)
 from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
+
+from load_dataset import create_dataloader, create_dataloader_one_image
+from train import test_model_one_image, test_model_gradCam
+from utils import get_model
+
+np.set_printoptions(threshold=np.inf)  # disables truncation
 
 
 def main(args):
@@ -23,13 +23,11 @@ def main(args):
     print(f"Using JSON: {args.json_fold}")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     print(f"Device used: {device}")
     print("Start loading data")
 
     if "siamese" in args.model_config.lower():
-        print("SIAMESE FOUND")
         train_loader, val_loader, test_loader = create_dataloader(args.batch_size,
                                                                 args.json_fold,
                                                                 args.sampler,
