@@ -1,0 +1,5 @@
+{
+    "train": ["patient_001", "patient_002", "patient_003"],
+    "val":   ["patient_004"],
+    "test":  ["patient_005"]
+}

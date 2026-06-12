@@ -1,0 +1,14 @@
+{
+    "patient_001": [
+        [
+            {"name": "patient_001/restaging.jpg", "label": 0},
+            {"name": "patient_001/followup.jpg",  "label": 0}
+        ]
+    ],
+    "patient_002": [
+        [
+            {"name": "patient_002/restaging.jpg", "label": 1},
+            {"name": "patient_002/followup.jpg",  "label": 1}
+        ]
+    ]
+}
